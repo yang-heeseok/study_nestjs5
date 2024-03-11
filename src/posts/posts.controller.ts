@@ -32,18 +32,18 @@ export class PostsController {
     return this.postsService.createPost(author, title, content);
   }
 
-  // @Patch(':id')
-  // patchPost(
-  //   @Param('id') id: string,
-  //   @Body('author') author?: string,
-  //   @Body('title') title?: string,
-  //   @Body('content') content?: string,
-  // ) {
-  //   return this.postsService.updatePost(id, author, title, content);
-  // }
+  @Patch(':id')
+  patchPost(
+    @Param('id') id: string,
+    @Body('author') author?: string,
+    @Body('title') title?: string,
+    @Body('content') content?: string,
+  ) {
+    return this.postsService.updatePost(+id, author, title, content);
+  }
 
-  // @Delete(':id')
-  // deletePost(@Param('id') id: string) {
-  //   return this.postsService.deletePost(id);
-  // }
+  @Delete(':id')
+  deletePost(@Param('id') id: string) {
+    return this.postsService.deletePost(+id);
+  }
 }

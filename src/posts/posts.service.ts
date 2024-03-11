@@ -39,24 +39,23 @@ export class PostsService {
     return newPost;
   }
 
-  //   updatePost(
-  //     id: string,
-  //     author?: string,
-  //     title?: string,
-  //     content?: string,
-  //   ): PostModel {
-  //     const post = this.getPostById(id);
-  //     if (author) post.author = author;
-  //     if (title) post.title = title;
-  //     if (content) post.content = content;
+  async updatePost(
+    postId: number,
+    author: string,
+    title: string,
+    content: string,
+  ) {
+    const post = await this.getPostById(postId);
+    if (author) post.author = author;
+    if (title) post.title = title;
+    if (content) post.content = content;
 
-  //     posts = posts.map((e) => (e.id === +id ? post : e));
-  //     return post;
-  //   }
+    const newPost = await this.postRepository.save(post);
+    return newPost;
+  }
 
-  //   deletePost(id: string): PostModel {
-  //     const post = this.getPostById(id);
-  //     posts = posts.filter((e) => e.id !== +id);
-  //     return post;
-  //   }
+  async deletePost(id: number) {
+    this.getPostById(id);
+    await this.postRepository.delete(id);
+  }
 }
