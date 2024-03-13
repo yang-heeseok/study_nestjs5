@@ -11,7 +11,7 @@ export class PostsService {
   ) {}
 
   async getAllPosts() {
-    return this.postRepository.find();
+    return await this.postRepository.find();
   }
 
   async getPostById(id: number) {
@@ -20,6 +20,7 @@ export class PostsService {
         id,
       },
     });
+
     if (!post) {
       throw new NotFoundException();
     } else {
@@ -54,8 +55,8 @@ export class PostsService {
     return newPost;
   }
 
-  async deletePost(id: number) {
-    this.getPostById(id);
-    await this.postRepository.delete(id);
+  async deletePost(postId: number) {
+    await this.getPostById(postId);
+    await this.postRepository.delete(postId);
   }
 }

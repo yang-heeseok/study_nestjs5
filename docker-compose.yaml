@@ -4,7 +4,7 @@ services:
     image: postgres:15
     restart: always
     volumes:
-      - C:\project\study\study_nestjs5\postgres-data:/var/lib/postgres/data
+      - ./postgres-data:/var/lib/postgresql/data
     ports:
       - '5432:5432'
     environment:
