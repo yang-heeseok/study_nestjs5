@@ -1,9 +1,10 @@
+# docker-compose up
 services:
   postgres:
     image: postgres:15
     restart: always
     volumes:
-      - ./postgres-data:/var/lib/postgres/data
+      - C:\project\study\study_nestjs5\postgres-data:/var/lib/postgres/data
     ports:
       - '5432:5432'
     environment:
