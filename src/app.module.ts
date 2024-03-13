@@ -7,6 +7,7 @@ import { PostModel } from './posts/entities/post.entity';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { UsersModel } from './users/entities/users.entity';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { UsersModel } from './users/entities/users.entity';
     }),
     AuthModule,
     UsersModule,
+    CommonModule,
   ],
   controllers: [AppController],
   providers: [AppService],
