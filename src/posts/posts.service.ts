@@ -11,7 +11,9 @@ export class PostsService {
   ) {}
 
   async getAllPosts() {
-    return await this.postRepository.find();
+    return await this.postRepository.find({
+      relations: ['author'],
+    });
   }
 
   async getPostById(id: number) {
@@ -19,6 +21,7 @@ export class PostsService {
       where: {
         id,
       },
+      relations: ['author'],
     });
 
     if (!post) {
@@ -28,9 +31,11 @@ export class PostsService {
     }
   }
 
-  async createPost(author: string, title: string, content: string) {
+  async createPost(authorId: number, title: string, content: string) {
     const post = this.postRepository.create({
-      author,
+      author: {
+        id: authorId,
+      },
       title,
       content,
       likeCnt: 0,
@@ -40,14 +45,8 @@ export class PostsService {
     return newPost;
   }
 
-  async updatePost(
-    postId: number,
-    author: string,
-    title: string,
-    content: string,
-  ) {
+  async updatePost(postId: number, title: string, content: string) {
     const post = await this.getPostById(postId);
-    if (author) post.author = author;
     if (title) post.title = title;
     if (content) post.content = content;
 
