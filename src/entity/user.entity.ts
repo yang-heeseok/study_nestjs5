@@ -3,10 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   Generated,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   VersionColumn,
 } from 'typeorm';
+import { ProfileModel } from './profile.entity';
 
 export enum Role {
   USER = 'user',
@@ -20,17 +22,19 @@ export class UserModel {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({
-    type: 'varchar',
-    name: 'ttiittllee',
-    length: 300,
-    nullable: true,
-    update: false,
-    select: false,
-    default: 'default value',
-    unique: false,
-  })
-  title: string;
+  @Column()
+  email: string;
+  //   @Column({
+  //     type: 'varchar',
+  //     name: 'ttiittllee',
+  //     length: 300,
+  //     nullable: true,
+  //     update: false,
+  //     select: false,
+  //     default: 'default value',
+  //     unique: false,
+  //   })
+  //   title: string;
 
   @Column({
     type: 'enum',
@@ -53,4 +57,7 @@ export class UserModel {
   @Column()
   @Generated('increment')
   additionalId: number;
+
+  @OneToOne(() => ProfileModel, (profile) => profile.user)
+  profile: ProfileModel;
 }

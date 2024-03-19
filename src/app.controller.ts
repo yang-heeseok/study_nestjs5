@@ -21,14 +21,14 @@ export class AppController {
     return await this.userRepository.save({ title: 'title1' });
   }
 
-  @Patch(':id')
-  async updateUser(@Param('id') id: string) {
-    const user = await this.userRepository.findOne({
-      where: { id: parseInt(id) },
-    });
-    return await this.userRepository.save({
-      ...user,
-      title: 'update title',
-    });
-  }
+  // @Patch(':id')
+  // async updateUser(@Param('id') id: string) {
+  //   const user = await this.userRepository.findOne({
+  //     where: { id: parseInt(id) },
+  //   });
+  //   return await this.userRepository.save({
+  //     ...user,
+  //     title: 'update title',
+  //   });
+  // }
 }

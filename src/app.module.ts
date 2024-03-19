@@ -11,6 +11,7 @@ import {
   ComputerModel,
   SingleBaseModel,
 } from './entity/inheritance.entity';
+import { ProfileModel } from './entity/profile.entity';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import {
         SingleBaseModel,
         ComputerModel,
         AirplaneModel,
+        ProfileModel,
       ],
       synchronize: true,
     }),
