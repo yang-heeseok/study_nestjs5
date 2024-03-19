@@ -1,5 +1,5 @@
 services:
-  progres:
+  postgres:
     image: postgres:15
     restart: always
     volumes:
@@ -9,4 +9,4 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: typeormstudy
+      POSTGRES_DB: postgres
