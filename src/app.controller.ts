@@ -13,13 +13,17 @@ export class AppController {
 
   @Get()
   async getUsers() {
-    return await this.userRepository.find();
+    return await this.userRepository.find({
+      relations: {
+        profile:true
+      }
+    });
   }
 
-  @Post()
-  async createUser() {
-    return await this.userRepository.save({ title: 'title1' });
-  }
+  // @Post()
+  // async createUser() {
+  //   return await this.userRepository.save({ title: 'title1' });
+  // }
 
   // @Patch(':id')
   // async updateUser(@Param('id') id: string) {
@@ -31,4 +35,7 @@ export class AppController {
   //     title: 'update title',
   //   });
   // }
+
+  @Post()
+
 }

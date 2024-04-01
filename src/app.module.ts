@@ -12,7 +12,7 @@ import {
   SingleBaseModel,
 } from './entity/inheritance.entity';
 import { ProfileModel } from './entity/profile.entity';
-
+kw;
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserModel, StudentModel, TeacherModel]),
