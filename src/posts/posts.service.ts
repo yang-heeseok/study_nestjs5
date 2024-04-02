@@ -12,33 +12,6 @@ export interface postModel {
   commentCount: number;
 }
 
-let posts: postModel[] = [
-  {
-    id: 1,
-    author: 'string_1',
-    title: 'string_1',
-    content: 'string_1',
-    likeCount: 0,
-    commentCount: 0,
-  },
-  {
-    id: 2,
-    author: 'string_2',
-    title: 'string_2',
-    content: 'string_2',
-    likeCount: 0,
-    commentCount: 0,
-  },
-  {
-    id: 3,
-    author: 'string_3',
-    title: 'string_3',
-    content: 'string_3',
-    likeCount: 0,
-    commentCount: 0,
-  },
-];
-
 @Injectable()
 export class PostsService {
   constructor(
@@ -47,16 +20,20 @@ export class PostsService {
   ) {}
 
   async getAllPosts() {
-    return await this.postsRepostory.find();
+    return await this.postsRepostory.find({
+      // relations: ['author'],
+      relations: {
+        author: true,
+      },
+    });
   }
 
   async getPostById(id: number) {
     const post = await this.postsRepostory.findOne({
       where: { id },
+      relations: ['author'],
     });
-    if (!post) {
-      throw new NotFoundException('id 의 post가 없습니다.');
-    }
+    if (!post) throw new NotFoundException('id 의 post가 없습니다.');
     return post;
   }
 
