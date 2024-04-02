@@ -14,12 +14,12 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get()
-  getAllpost(): postModel[] {
+  getAllpost() {
     return this.postsService.getAllPosts();
   }
 
   @Get(':id')
-  getPost(@Param('id') id: string): postModel {
+  getPost(@Param('id') id: string) {
     return this.postsService.getPostById(+id);
   }
 
@@ -38,12 +38,12 @@ export class PostsController {
     @Body('author') author: string,
     @Body('title') title: string,
     @Body('content') content: string,
-  ): postModel {
+  ) {
     return this.postsService.updatePost(+id, author, title, content);
   }
 
   @Delete(':id')
-  deletePost(@Param('id') id: string): postModel {
+  deletePost(@Param('id') id: string) {
     return this.postsService.deletePost(+id);
   }
 }

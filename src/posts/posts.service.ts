@@ -1,4 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { PostModel } from './entities/posts.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 export interface postModel {
   id: number;
@@ -38,33 +41,42 @@ let posts: postModel[] = [
 
 @Injectable()
 export class PostsService {
-  getAllPosts(): postModel[] {
-    return posts;
+  constructor(
+    @InjectRepository(PostModel)
+    private readonly postsRepostory: Repository<PostModel>,
+  ) {}
+
+  async getAllPosts() {
+    return await this.postsRepostory.find();
   }
 
-  getPostById(id: number): postModel {
-    const post = posts.find((post) => post.id == id);
+  async getPostById(id: number) {
+    const post = await this.postsRepostory.findOne({
+      where: { id },
+    });
     if (!post) {
       throw new NotFoundException('id 의 post가 없습니다.');
     }
     return post;
   }
 
-  createPost(author: string, title: string, content: string): postModel {
-    const post = {
-      id: posts[posts.length - 1].id + 1,
+  createPost(author: string, title: string, content: string) {
+    // [1] create
+    // [2] save
+    const post = this.postsRepostory.create({
       author,
       title,
       content,
       likeCount: 0,
       commentCount: 0,
-    };
-    posts.push(post);
-    return post;
+    });
+    const newPost = this.postsRepostory.save(post);
+    return newPost;
   }
 
-  updatePost(id: number, author: string, title: string, content: string) {
-    const post: postModel = this.getPostById(id);
+  async updatePost(id: number, author: string, title: string, content: string) {
+    // save 기능 : 생성, 업데이트
+    const post = await this.postsRepostory.findOne({ where: { id } });
     if (author) {
       post.author = author;
     }
@@ -74,13 +86,13 @@ export class PostsService {
     if (content) {
       post.content = content;
     }
-    posts.map((prePost) => (prePost.id == +id ? post : prePost));
-    return post;
+    const updatePost = await this.postsRepostory.save(post);
+    return updatePost;
   }
 
-  deletePost(id: number) {
-    const post = this.getPostById(id);
-    posts = posts.filter((post) => post.id !== +id);
+  async deletePost(postId: number) {
+    const post = await this.getPostById(postId);
+    await this.postsRepostory.delete(postId);
     return post;
   }
 }
