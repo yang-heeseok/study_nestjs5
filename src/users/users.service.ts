@@ -17,6 +17,7 @@ export class UsersService {
     if (nicknameExists) {
       throw new BadRequestException('이미 존재하는 nickname 입니다.');
     }
+
     const emailExists = await this.usersRepository.exists({
       where: { email: user.email },
     });
@@ -29,7 +30,9 @@ export class UsersService {
       email: user.email,
       password: user.password,
     });
+
     const newUser = this.usersRepository.save(userObj);
+
     return newUser;
   }
 

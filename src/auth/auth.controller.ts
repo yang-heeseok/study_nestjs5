@@ -33,6 +33,6 @@ export class AuthController {
     @Body('email') email: string,
     @Body('password') password: string,
   ) {
-    return this.authService.retisterWithEmail({ nickname, email, password });
+    return this.authService.registerWithEmail({ nickname, email, password });
   }
 }

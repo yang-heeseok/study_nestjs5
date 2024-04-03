@@ -12,36 +12,33 @@ export class AuthService {
     private readonly usersService: UsersService,
   ) {}
   /**
-   * (1) registerQithEmail
+   * 1) registerQithEmail
    * - email, nickname, password 입력받고, 사용자 생성
    * - accessToken, refreshToken을 반환
    *
-   * (2) loginWithEmail
+   * 2) loginWithEmail
    * - email, password 를 입력, 사용자 검증
    * - 검증이 완료되면 accessToken, refreshToken 을 반환
    *
-   * (3). loginUser
-   * - (1), (2)에서 필요한 accessToken, refreshToken 을 반환하는 로직
+   * 3). loginUser
+   * - 1), 2)에서 필요한 accessToken, refreshToken 을 반환하는 로직
    *
-   * (4) singToken
-   * - (3)에서 필요한 accessToken, refreshToken을 sign하는 로직
+   * 4) singToken
+   * - 3)에서 필요한 accessToken, refreshToken을 sign하는 로직
    *
-   * (5) authenticateWithEmailAndPassword
-   * - (2)에서 로그인을 진행할때 필요한 기본적인 검증 진행
+   * 5) authenticateWithEmailAndPassword
+   * - 2)에서 로그인을 진행할때 필요한 기본적인 검증 진행
    *    1. 사용자가 존재하는지 확인 (email)
    *    2. 비밀번호가 맞는지 확인
    *    3. 모두 통과되면 찾은 사용자 정보봔환
    *    4. loginWithEmail에서 반환된 데이터를 기반으로 토큰 생성
    *
    * Q : accessToken expire 되지 않았다면, 2번과정은 생략되는 건가?
-   *
+   * Q : loginUser 반환값이 2종류의 token 을 cookie 로 반환하지 않는건가?
+   * Q :
    */
 
-  /** (4)
-   * 1. email
-   * 2. sub -> id
-   * 3. type
-   */
+  /** 4) */
   signToken(user: Pick<UsersModel, 'email' | 'id'>, isRefreshToken: boolean) {
     const payload = {
       email: user.email,
@@ -55,7 +52,7 @@ export class AuthService {
     });
   }
 
-  /** (3) */
+  /** 3) */
   async loginUser(user: Pick<UsersModel, 'email' | 'id'>) {
     return {
       accessToken: this.signToken(user, false),
@@ -63,7 +60,7 @@ export class AuthService {
     };
   }
 
-  /** (5) */
+  /** 5) */
   async authenticateWithEmailAndPassword(
     user: Pick<UsersModel, 'email' | 'password'>,
   ) {
@@ -80,14 +77,14 @@ export class AuthService {
     return existingUser;
   }
 
-  /** (2) */
+  /** 2) */
   async loginWithEmail(user: Pick<UsersModel, 'email' | 'password'>) {
     const existingUser = await this.authenticateWithEmailAndPassword(user);
     return this.loginUser(existingUser);
   }
 
-  /** (1) */
-  async retisterWithEmail(
+  /** 1) */
+  async registerWithEmail(
     user: Pick<UsersModel, 'nickname' | 'email' | 'password'>,
   ) {
     const hash = await bcrypt.hash(user.password, HASH_ROUNDS);
@@ -100,19 +97,25 @@ export class AuthService {
 
   /**
    * 1) 사용자가 로그인 or 회원가입을 진행하면 accessToken, refreshToken 을 발급
+   *
    * 2) 로그인 할 때, Basic 토큰과 함께 요청
    *    BasicToken 은 email:password 을 Base64 로 인코딩 한다.
    *    예) {authorization: 'Basic {token}'}
+   *
    * 3) 아무나 접근할 수 없는 정보(private route)를 접근할 때에는
    *    accessToken 을 Header에 추가해서 요청과 함께 보낸다.
    *    예) {authorization: 'Bearer {token}'}
+   *
    * 4) token 과 request를 함께 받은 서버는 token 검증을 통해, user 가 누구인지 알 수 있다.
    *    token 이 없는 사용자는 데이터에 접근하지 못한다.
+   *
    * 5) 만료된 토큰은 재발급 받아야 한다. jwService.verify()의 인증에서 통과되지 못한다.
    *    access : auth/token/access
    *    refresh : auth/token/refresh
+   *
    * 6) 각각 엔드포인트에서 token을 재발급 받는다.
    */
+
   extracTokenFromHeader(header: string, isBearer: boolean) {
     const splitToken = header.split(' ');
     const prefix = isBearer ? 'Bearer' : 'Basic';
