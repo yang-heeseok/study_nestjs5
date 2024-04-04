@@ -1,8 +1,6 @@
 import {
-  Request,
   Body,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   Param,
