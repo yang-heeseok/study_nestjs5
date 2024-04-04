@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PaginatePostDto } from './dto/paginate-post.dto';
-import { after } from 'node:test';
 import { HOST, PROTOCOL } from 'src/common/const/env.const';
 
 export interface postModel {
@@ -43,8 +42,30 @@ export class PostsService {
     }
   }
 
-  // 1) 오름차 순으로 정렬하는 pagination 만 구현
   async paginatePosts(dto: PaginatePostDto) {
+    if (dto.page) {
+      return this.pagePaginatePosts(dto);
+    } else {
+      return this.cursorPaginatePosts(dto);
+    }
+  }
+  async pagePaginatePosts(dto: PaginatePostDto) {
+    /**
+     * data: Datap[]
+     * total: number
+     */
+    const [posts, total] = await this.postsRepostory.findAndCount({
+      skip: dto.take * (dto.page - 1),
+      take: dto.take,
+      order: { createdAt: dto.order__createdAt },
+    });
+
+    return {
+      data: posts,
+      total,
+    };
+  }
+  async cursorPaginatePosts(dto: PaginatePostDto) {
     const where: FindOptionsWhere<PostModel> = {};
     if (dto.where__id_less_than) {
       where.id = LessThan(dto.where__id_less_than);
