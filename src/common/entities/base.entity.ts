@@ -6,15 +6,15 @@ import {
 } from 'typeorm';
 
 export abstract class BaseModel {
-  @Exclude({ toPlainOnly: true })
+  // @Exclude({ toPlainOnly: true })
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Exclude({ toPlainOnly: true })
+  // @Exclude({ toPlainOnly: true })
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Exclude({ toPlainOnly: true })
+  // @Exclude({ toPlainOnly: true })
   @CreateDateColumn()
   createdAt: Date;
 }
